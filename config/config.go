@@ -5,7 +5,7 @@ type Configuration interface {
 	GetStringList(key string) ([]string, error)
 	GetStringMap(key string) (map[string]string, error)
 	GetInt(key string) (int, error)
-	GetBoolean(key string) (bool,error)
+	GetBoolean(key string) (bool, error)
 }
 
 var cache = make(map[string]Configuration)
@@ -23,7 +23,7 @@ func Get(name, configType string) (config Configuration, err error) {
 		}
 	case "json":
 		{
-			config, err = createJsonConfiguration("")
+			config, err = createJsonConfiguration("config/" + name + ".json")
 		}
 	}
 
