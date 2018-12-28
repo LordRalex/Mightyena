@@ -24,7 +24,7 @@ func (fc *jsonConfiguration) load(path string) error {
 	}
 	defer file.Close()
 
-	return json.NewDecoder(file).Decode(fc.mapping)
+	return json.NewDecoder(file).Decode(&fc.mapping)
 }
 
 func (fc *jsonConfiguration) GetString(key string) (string, error) {
