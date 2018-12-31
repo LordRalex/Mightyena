@@ -9,15 +9,15 @@ import (
 
 var userCache = make(map[string]*user)
 
-var writeInProgress = sync.RWMutex{}
+var userWriter = sync.RWMutex{}
 
 func GetUser(nickname string) (User, error) {
 	return getUser(nickname), nil
 }
 
 func getUser(nickname string) *user {
-	writeInProgress.RLock()
-	defer writeInProgress.RUnlock()
+	userWriter.RLock()
+	defer userWriter.RUnlock()
 	return userCache[nickname]
 }
 
@@ -34,8 +34,8 @@ func handleJoinEventUserService(event *irc.Event) {
 		nickservName: "",
 	}
 
-	writeInProgress.Lock()
-	defer writeInProgress.Unlock()
+	userWriter.Lock()
+	defer userWriter.Unlock()
 	userCache[user.GetNickname()] = user
 }
 
@@ -46,8 +46,8 @@ func handleQuitEventUserService(event *irc.Event) {
 		return
 	}
 
-	writeInProgress.Lock()
-	defer writeInProgress.Unlock()
+	userWriter.Lock()
+	defer userWriter.Unlock()
 	userCache[event.Nick] = nil
 }
 
@@ -59,8 +59,8 @@ func handleNickEventUserService(event *irc.Event) {
 		return
 	}
 
-	writeInProgress.Lock()
-	defer writeInProgress.Unlock()
+	userWriter.Lock()
+	defer userWriter.Unlock()
 
 	//update cache with new nickname
 	user.nickname = event.Arguments[0]
@@ -85,8 +85,8 @@ func startCleanupUserService() {
 }
 
 func userServiceTick() {
-	writeInProgress.Lock()
-	defer writeInProgress.Unlock()
+	userWriter.Lock()
+	defer userWriter.Unlock()
 
 	newListing := make(map[string]*user)
 
