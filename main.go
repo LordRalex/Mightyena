@@ -15,6 +15,8 @@ var bot *irc.Connection
 var logger = logging.GetLogger("CORE")
 
 func main() {
+	logger.Log(logging.Debug, "%v", os.Args)
+
 	coreConfig, err := config.Get("core", "json")
 	if err != nil {
 		logger.Log(logging.Error, err.Error())
@@ -50,9 +52,12 @@ func main() {
 
 	if len(os.Args) > 1 {
 		go func() {
-			time.Sleep(5 * time.Second)
+			time.Sleep(3 * time.Second)
+			logger.Log(logging.Info, "Joining %s", os.Args[1])
 			bot.Join(os.Args[1])
 		}()
+	} else {
+		logger.Log(logging.Info, "No channel specified")
 	}
 
 	bot.Loop()
