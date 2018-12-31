@@ -17,12 +17,13 @@ func handleNamesEventChannelService(event *irc.Event) {
 	//third arg is the channel
 	//rest are users
 	channelName := event.Arguments[2]
+	names := strings.Split(event.Arguments[3], " ")
 
 	if namesBuffer[channelName] == nil {
 		namesBuffer[channelName] = make([]string, 0)
 	}
 
-	namesBuffer[channelName] = append(namesBuffer[channelName], event.Arguments[3:]...)
+	namesBuffer[channelName] = append(namesBuffer[channelName], names...)
 }
 
 func handleNamesEndEventChannelService(event *irc.Event) {
