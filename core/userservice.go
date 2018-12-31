@@ -42,7 +42,7 @@ func handleJoinEventUserService(event *irc.Event) {
 func handleQuitEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	if u := getUser(event.Nick); u == nil {
-		logging.GetLogger("USER SERVICE").Printf("User not in the cache when they quit: [%s]", event.Nick)
+		logging.GetLogger("USER SERVICE").Log(logging.Info, "User not in the cache when they quit: [%s]", event.Nick)
 		return
 	}
 
@@ -55,7 +55,7 @@ func handleNickEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	var user *user
 	if user = getUser(event.Nick); user == nil {
-		logging.GetLogger("USER SERVICE").Printf("User not in the cache when they changed nicks: [%s]", event.Nick)
+		logging.GetLogger("USER SERVICE").Log(logging.Info,"User not in the cache when they changed nicks: [%s]", event.Nick)
 		return
 	}
 

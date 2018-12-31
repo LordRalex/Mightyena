@@ -2,34 +2,34 @@ package core
 
 type Channel interface {
 	GetName() string
-	GetUsers() []User
-	GetOps() []User
-	GetVoiced() []User
+	GetUsers() []string
+	GetOps() []string
+	GetVoiced() []string
 	HasVoiceOrOp(name string) bool
 	HasOp(name string) bool
 	HasVoice(name string) bool
 }
 
 type channel struct {
-	users  []User
+	users  []string
 	name   string
-	ops    []User
-	voiced []User
+	ops    []string
+	voiced []string
 }
 
 func (c *channel) GetName() string {
 	return c.name
 }
 
-func (c *channel) GetUsers() []User {
+func (c *channel) GetUsers() []string {
 	return c.users
 }
 
-func (c *channel) GetOps() []User {
+func (c *channel) GetOps() []string {
 	return c.ops
 }
 
-func (c *channel) GetVoiced() []User {
+func (c *channel) GetVoiced() []string {
 	return c.voiced
 }
 
@@ -39,7 +39,7 @@ func (c *channel) HasVoiceOrOp(name string) bool {
 
 func (c *channel) HasOp(name string) bool {
 	for _, v := range c.ops {
-		if v.GetNickname() == name {
+		if v == name {
 			return true
 		}
 	}
@@ -48,7 +48,7 @@ func (c *channel) HasOp(name string) bool {
 
 func (c *channel) HasVoice(name string) bool {
 	for _, v := range c.voiced {
-		if v.GetNickname() == name {
+		if v == name {
 			return true
 		}
 	}

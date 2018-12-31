@@ -1,9 +1,7 @@
 package logging
 
 type Logger interface {
-	Print(msg string)
-
-	Printf(format string, args ...interface{})
+	Log(level Level, format string, args ...interface{})
 }
 
 var cache = make(map[string]Logger)
@@ -18,3 +16,4 @@ func GetLogger(name string) Logger {
 
 	return logger
 }
+

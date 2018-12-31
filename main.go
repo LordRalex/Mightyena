@@ -4,28 +4,32 @@ import (
 	"github.com/lordralex/mightyena/config"
 	"github.com/lordralex/mightyena/core"
 	"github.com/lordralex/mightyena/database"
+	"github.com/lordralex/mightyena/logging"
 	"github.com/thoj/go-ircevent"
+	"os"
 	"time"
 )
 
 var bot *irc.Connection
 
+var logger = logging.GetLogger("CORE")
+
 func main() {
 	coreConfig, err := config.Get("core", "json")
 	if err != nil {
-		panic(err)
+		logger.Log(logging.Error, err.Error())
 		return
 	}
 
 	dbUrl, err := coreConfig.GetString("database")
 	if err != nil {
-		panic(err)
+		logger.Log(logging.Error, err.Error())
 		return
 	}
 
 	err = database.CreatePool(dbUrl)
 	if err != nil {
-		panic(err)
+		logger.Log(logging.Error, err.Error())
 		return
 	}
 
@@ -40,13 +44,16 @@ func main() {
 	core.CreateServiceHandlers(bot)
 	err = bot.Connect(server)
 	if err != nil {
-		panic(err)
+		logger.Log(logging.Error, err.Error())
 		return
 	}
 
-	go func() {
-		time.Sleep(5 * time.Second)
-	}()
+	if len(os.Args) > 1 {
+		go func() {
+			time.Sleep(5 * time.Second)
+			bot.Join(os.Args[1])
+		}()
+	}
 
 	bot.Loop()
 }
