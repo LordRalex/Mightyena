@@ -5,6 +5,7 @@ import (
 	"github.com/lordralex/mightyena/core"
 	"github.com/lordralex/mightyena/database"
 	"github.com/thoj/go-ircevent"
+	"time"
 )
 
 var bot *irc.Connection
@@ -42,6 +43,11 @@ func main() {
 		panic(err)
 		return
 	}
+
+	go func() {
+		time.Sleep(5 * time.Second)
+	}()
+
 	bot.Loop()
 }
 

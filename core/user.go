@@ -20,9 +20,6 @@ type User interface {
 	//This is only supported if the IRC server has such a system.
 	//An empty string indicates the user is not logged into an account.
 	GetNickservAccount() string
-
-	//Gets the channels this user belongs to
-	GetChannels() []Channel
 }
 
 type user struct {
@@ -30,7 +27,6 @@ type user struct {
 	loginName    string
 	host         string
 	nickservName string
-	channels     []Channel
 }
 
 func (u *user) GetNickname() string {
@@ -47,8 +43,4 @@ func (u *user) GetHostname() string {
 
 func (u *user) GetNickservAccount() string {
 	return u.nickservName
-}
-
-func (u *user) GetChannels() []Channel {
-	return u.channels
 }
