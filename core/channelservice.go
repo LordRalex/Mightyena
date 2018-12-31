@@ -1,7 +1,6 @@
 package core
 
 import (
-	"github.com/lordralex/mightyena/logging"
 	"github.com/thoj/go-ircevent"
 	"strings"
 	"sync"
@@ -52,8 +51,7 @@ func handleNamesEndEventChannelService(event *irc.Event) {
 			channel.voiced = append(channel.voiced, name)
 		}
 		channel.users = append(channel.users, name)
-		logging.GetLogger("CHAN SERVICE").Log(logging.Debug, "Added %s to channel list", name)
-		//event.Connection.Whois(name)
+		event.Connection.Whois(name)
 	}
 
 	channelWriter.Lock()
