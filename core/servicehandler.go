@@ -7,11 +7,16 @@ import (
 
 var serviceLogger logging.Logger
 
+var namesBuffer = make(map[string]string)
+
 func CreateServiceHandlers(connection *irc.Connection) {
 	connection.AddCallback("JOIN", handleJoin)
 	connection.AddCallback("QUIT", handleQuit)
 	connection.AddCallback("PART", handlePart)
 	connection.AddCallback("NICK", handleNick)
+	//connection.AddCallback("333", handleNamesStart)
+	connection.AddCallback("353", handleNamesContinued)
+	connection.AddCallback("366", handleNamesEnd)
 	serviceLogger = logging.GetLogger("SERVICE")
 
 	startCleanupUserService()
@@ -53,4 +58,12 @@ func handleNick(event *irc.Event) {
 
 	serviceLogger.Log(logging.Info, "[NICK] %+v\n", event)
 	handleNickEventUserService(event)
+}
+
+func handleNamesContinued(event *irc.Event) {
+	serviceLogger.Log(logging.Info, "[NAMES] %+v\n", event)
+}
+
+func handleNamesEnd(event *irc.Event) {
+	serviceLogger.Log(logging.Info, "[NAMES-END] %+v\n", event)
 }
