@@ -11,6 +11,8 @@ var userCache = make(map[string]*user)
 
 var userWriter = sync.RWMutex{}
 
+var userServiceLogger = logging.GetLogger("USER SERVICE")
+
 func GetUser(nickname string) (User, error) {
 	return getUser(nickname), nil
 }
@@ -42,20 +44,24 @@ func handleJoinEventUserService(event *irc.Event) {
 func handleQuitEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	if u := getUser(event.Nick); u == nil {
-		logging.GetLogger("USER SERVICE").Log(logging.Info, "User not in the cache when they quit: [%s]", event.Nick)
+		userServiceLogger.Log(logging.Info, "User not in the cache when they quit: [%s]", event.Nick)
 		return
 	}
 
 	userWriter.Lock()
 	defer userWriter.Unlock()
 	userCache[event.Nick] = nil
+
+	if event.Nick == event.Connection.GetNick() {
+		userCache = make(map[string]*user)
+	}
 }
 
 func handleNickEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	var user *user
 	if user = getUser(event.Nick); user == nil {
-		logging.GetLogger("USER SERVICE").Log(logging.Info,"User not in the cache when they changed nicks: [%s]", event.Nick)
+		userServiceLogger.Log(logging.Info,"User not in the cache when they changed nicks: [%s]", event.Nick)
 		return
 	}
 
@@ -87,6 +93,8 @@ func startCleanupUserService() {
 func userServiceTick() {
 	userWriter.Lock()
 	defer userWriter.Unlock()
+
+	userServiceLogger.Log(logging.Debug, "Running user service cleanup")
 
 	newListing := make(map[string]*user)
 

@@ -54,3 +54,32 @@ func (c *channel) HasVoice(name string) bool {
 	}
 	return false
 }
+
+func (c *channel) removeUser(name string) {
+	newUsers := make([]string, 0)
+
+	for _, v := range c.users {
+		if v != name {
+			newUsers = append(newUsers, v)
+		}
+	}
+	c.users = newUsers
+
+	newVoiced := make([]string, 0)
+
+	for _, v := range c.voiced {
+		if v != name {
+			newVoiced = append(newVoiced, v)
+		}
+	}
+	c.voiced = newVoiced
+
+	newOps := make([]string, 0)
+
+	for _, v := range c.ops {
+		if v != name {
+			newOps = append(newOps, v)
+		}
+	}
+	c.ops = newOps
+}
