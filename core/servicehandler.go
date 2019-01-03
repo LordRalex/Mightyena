@@ -11,6 +11,7 @@ func CreateServiceHandlers(connection *irc.Connection) {
 	connection.AddCallback("JOIN", handleJoin)
 	connection.AddCallback("QUIT", handleQuit)
 	connection.AddCallback("PART", handlePart)
+	connection.AddCallback("KICK", handleKick)
 	connection.AddCallback("NICK", handleNick)
 	//connection.AddCallback("333", handleNamesStart)
 	connection.AddCallback("353", handleNamesContinued)
@@ -42,9 +43,7 @@ func handlePart(event *irc.Event) {
 	serviceLogger.Log(logging.Debug, "[PART] %+v", event)
 
 	handlePartEventChannelService(event)
-	if event.Connection.GetNick() == event.Nick {
-		//handle channel part event
-	}
+	handlePartEventUserService(event)
 }
 
 func handleNick(event *irc.Event) {
@@ -65,4 +64,12 @@ func handleNamesContinued(event *irc.Event) {
 func handleNamesEnd(event *irc.Event) {
 	//[SERVICE] [INFO] [NAMES-END] &{Code:366 Raw::nova.esper.net 366 Mightyena #minecrafthelp.breakroom :End of /NAMES list. Nick: Host: Source:nova.esper.net User: Arguments:[Mightyena #minecrafthelp.breakroom End of /NAMES list.] Tags:map[] Connection:0xc0001a8000 Ctx:context.Background}
 	handleNamesEndEventChannelService(event)
+}
+
+func handleKick(event *irc.Event) {
+	serviceLogger.Log(logging.Debug, "[KICK] %+v", event)
+
+	//kicks are just forced parts to our services
+	handlePartEventChannelService(event)
+	handlePartEventUserService(event)
 }

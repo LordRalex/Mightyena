@@ -74,6 +74,22 @@ func handleNickEventUserService(event *irc.Event) {
 	userCache[user.GetNickname()] = user
 }
 
+func handlePartEventUserService(event *irc.Event) {
+	//determine if they don't exist in any channels we track
+	for _, v := range channelCache {
+		for _, u := range v.users {
+			if u == event.Nick {
+				return
+			}
+		}
+	}
+
+	userWriter.Lock()
+	defer userWriter.Unlock()
+
+	userCache[event.Nick] = nil
+}
+
 func startCleanupUserService() {
 	ticker := time.NewTicker(5 * time.Minute)
 	quit := make(chan struct{})
