@@ -54,7 +54,6 @@ func handleNamesEndEventChannelService(event *irc.Event) {
 			channel.voiced = append(channel.voiced, name)
 		}
 		channel.users = append(channel.users, name)
-		event.Connection.Whois(name)
 	}
 
 	channelWriter.Lock()
