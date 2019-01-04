@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/lordralex/mightyena/core"
+	"github.com/lordralex/mightyena/logging"
 	"github.com/thoj/go-ircevent"
 	"sync"
 	"time"
@@ -104,6 +105,8 @@ func handleWhoEventUserService(event *irc.Event) {
 	userWriter.Lock()
 	defer userWriter.Unlock()
 	userCache[nick] = u
+
+	logging.GetLogger("USER SVC").Debug("Added to cache: %+v", userCache[nick])
 }
 
 func startCleanupUserService() {
