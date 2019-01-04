@@ -15,6 +15,8 @@ func CreateServiceHandlers(connection *irc.Connection) {
 	connection.AddCallback("NICK", handleNick)
 	connection.AddCallback("353", handleNamesContinued)
 	connection.AddCallback("366", handleNamesEnd)
+
+
 	serviceLogger = logging.GetLogger("CORE SERVICE")
 
 	startCleanupUserService()

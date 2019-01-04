@@ -5,6 +5,7 @@ import (
 	"github.com/thoj/go-ircevent"
 	"strings"
 	"sync"
+	"time"
 )
 
 var channelCache = make(map[string]*channel)
@@ -60,10 +61,23 @@ func handleNamesEndEventChannelService(event *irc.Event) {
 	defer channelWriter.Unlock()
 	channelCache[channelName] = channel
 
+	whoisList := make([]string, len(channel.users))
+
 	chanServiceLogger.Debug("Channel: %s", channelName)
-	for _, v := range channelCache[channelName].users {
+	for k, v := range channelCache[channelName].users {
 		chanServiceLogger.Debug("  User: %s", v)
+		whoisList[k] = v
 	}
+
+	//copy names in case someone leaves during our whois
+	go func(names []string, connection *irc.Connection) {
+		for len(names) > 0 {
+			<-time.After(1 * time.Second)
+			var name = names[0]
+			names = names[1:]
+			connection.Whois(name)
+		}
+	}(whoisList, event.Connection)
 }
 
 func handlePartEventChannelService(event *irc.Event) {
