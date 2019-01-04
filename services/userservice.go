@@ -88,7 +88,7 @@ func handlePartEventUserService(event *irc.Event) {
 }
 
 func handleWhoEventUserService(event *irc.Event) {
-	nick := event.Arguments[0]
+	nick := event.Arguments[5]
 	userName := event.Arguments[2]
 	host := event.Arguments[3]
 
