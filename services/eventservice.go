@@ -34,6 +34,8 @@ func fireMessageEvent(event *irc.Event) {
 
 func fireEvent(event events.Event) {
 	executors := listenerMapping[event.EventName()]
+	eventLogger.Debug("Firing event")
+	eventLogger.Debug("%+v", event)
 	for k, f := range executors {
 		eventLogger.Debug("Running executors for %s", k)
 		for _, function := range f {
