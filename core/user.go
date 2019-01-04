@@ -27,7 +27,6 @@ type user struct {
 	loginName    string
 	host         string
 	nickservName string
-	loaded       bool
 }
 
 func (u *user) GetNickname() string {
@@ -44,8 +43,4 @@ func (u *user) GetHostname() string {
 
 func (u *user) GetNickservAccount() string {
 	return u.nickservName
-}
-
-func (u *user) IsLoaded() bool {
-	return u.loaded
 }

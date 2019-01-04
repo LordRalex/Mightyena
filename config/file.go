@@ -10,7 +10,7 @@ type jsonConfiguration struct {
 	mapping interface{}
 }
 
-func createJsonConfiguration (path string) (config Configuration, err error) {
+func createJsonConfiguration(path string) (config Configuration, err error) {
 	cfg := &jsonConfiguration{}
 	err = cfg.load(path)
 	return cfg, err

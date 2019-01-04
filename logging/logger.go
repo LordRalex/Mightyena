@@ -26,4 +26,3 @@ func GetLogger(name string) Logger {
 
 	return logger
 }
-

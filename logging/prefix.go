@@ -31,5 +31,5 @@ func (pf *prefixLogger) Debug(format string, args ...interface{}) {
 }
 
 func (pf *prefixLogger) log(level Level, format string, args ...interface{}) {
-	fmt.Printf("[" + pf.Name + "] [" + level.Name() + "] " + format + "\n", args...)
+	fmt.Printf("["+pf.Name+"] ["+level.Name()+"] "+format+"\n", args...)
 }
