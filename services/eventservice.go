@@ -4,6 +4,7 @@ import (
 	"github.com/lordralex/mightyena/events"
 	"github.com/lordralex/mightyena/logging"
 	"github.com/thoj/go-ircevent"
+	"strings"
 )
 
 var listenerMapping = make(map[string]map[string][]func(events.Event))
@@ -27,6 +28,10 @@ func fireMessageEvent(event *irc.Event) {
 	message := event.Message()
 	nick := event.Nick
 	channel := event.Arguments[0]
+
+	if !strings.HasPrefix(channel, "#") {
+		channel = ""
+	}
 
 	evt := events.CreateMessageEvent(message, GetUser(nick), GetChannel(channel), event.Connection)
 	fireEvent(evt)
