@@ -15,7 +15,7 @@ func CreateServiceHandlers(connection *irc.Connection) {
 	connection.AddCallback("NICK", handleNick)
 	connection.AddCallback("353", handleNamesContinued)
 	connection.AddCallback("366", handleNamesEnd)
-
+	connection.AddCallback("352", handleWho)
 
 	serviceLogger = logging.GetLogger("CORE SERVICE")
 
@@ -53,4 +53,8 @@ func handleKick(event *irc.Event) {
 	//kicks are just forced parts to our services
 	handlePartEventChannelService(event)
 	handlePartEventUserService(event)
+}
+
+func handleWho(event *irc.Event) {
+	handleWhoEventUserService(event)
 }

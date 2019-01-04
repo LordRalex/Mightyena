@@ -90,6 +90,25 @@ func handlePartEventUserService(event *irc.Event) {
 	userCache[event.Nick] = nil
 }
 
+func handleWhoEventUserService(event *irc.Event) {
+	userServiceLogger.Debug("%+v", event)
+
+	u := userCache[event.Nick]
+
+	if u == nil {
+		u = &user{}
+	}
+
+	u.nickname = event.Nick
+	u.loginName = event.User
+	u.host = event.Host
+	userServiceLogger.Debug("[USER] %+v", u)
+	
+	userWriter.Lock()
+	defer userWriter.Unlock()
+	userCache[event.Nick] = u
+}
+
 func startCleanupUserService() {
 	ticker := time.NewTicker(5 * time.Minute)
 	quit := make(chan struct{})

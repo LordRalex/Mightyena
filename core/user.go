@@ -20,10 +20,6 @@ type User interface {
 	//This is only supported if the IRC server has such a system.
 	//An empty string indicates the user is not logged into an account.
 	GetNickservAccount() string
-
-	//Determines if this user has been fully loaded
-	//Since a whois is done async, all user information except for nick may be missing
-	IsLoaded() bool
 }
 
 type user struct {
