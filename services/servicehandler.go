@@ -1,13 +1,13 @@
-package core
+package services
 
 import (
-	"github.com/lordralex/mightyena/logging"
 	"github.com/thoj/go-ircevent"
 )
 
-var serviceLogger logging.Logger
+//var serviceLogger logging.Logger
 
 func CreateServiceHandlers(connection *irc.Connection) {
+	//service handlers
 	connection.AddCallback("JOIN", handleJoin)
 	connection.AddCallback("QUIT", handleQuit)
 	connection.AddCallback("PART", handlePart)
@@ -17,14 +17,16 @@ func CreateServiceHandlers(connection *irc.Connection) {
 	connection.AddCallback("366", handleNamesEnd)
 	connection.AddCallback("352", handleWho)
 
-	serviceLogger = logging.GetLogger("CORE SERVICE")
+	//event handler
+	connection.AddCallback("PRIVMSG", fireMessageEvent)
+
+	//serviceLogger = logging.GetLogger("CORE SERVICE")
 
 	startCleanupUserService()
 }
 
 func handleJoin(event *irc.Event) {
 	handleJoinEventUserService(event)
-	//join already does a /names, so no need to do anything special for the bot user
 }
 
 func handleQuit(event *irc.Event) {

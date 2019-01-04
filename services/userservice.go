@@ -1,7 +1,7 @@
-package core
+package services
 
 import (
-	"github.com/lordralex/mightyena/logging"
+	"github.com/lordralex/mightyena/core"
 	"github.com/thoj/go-ircevent"
 	"sync"
 	"time"
@@ -11,10 +11,8 @@ var userCache = make(map[string]*user)
 
 var userWriter = sync.RWMutex{}
 
-var userServiceLogger = logging.GetLogger("USER SERVICE")
-
-func GetUser(nickname string) (User, error) {
-	return getUser(nickname), nil
+func GetUser(nickname string) core.User {
+	return getUser(nickname)
 }
 
 func getUser(nickname string) *user {
@@ -38,13 +36,12 @@ func handleJoinEventUserService(event *irc.Event) {
 
 	userWriter.Lock()
 	defer userWriter.Unlock()
-	userCache[user.GetNickname()] = user
+	userCache[user.Nickname()] = user
 }
 
 func handleQuitEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	if u := getUser(event.Nick); u == nil {
-		userServiceLogger.Info("User not in the cache when they quit: [%s]", event.Nick)
 		return
 	}
 
@@ -61,7 +58,6 @@ func handleNickEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	var user *user
 	if user = getUser(event.Nick); user == nil {
-		userServiceLogger.Info("User not in the cache when they changed nicks: [%s]", event.Nick)
 		return
 	}
 
@@ -71,7 +67,7 @@ func handleNickEventUserService(event *irc.Event) {
 	//update cache with new nickname
 	user.nickname = event.Arguments[0]
 	userCache[event.Nick] = nil
-	userCache[user.GetNickname()] = user
+	userCache[user.Nickname()] = user
 }
 
 func handlePartEventUserService(event *irc.Event) {
@@ -104,7 +100,6 @@ func handleWhoEventUserService(event *irc.Event) {
 	u.nickname = nick
 	u.loginName = userName
 	u.host = host
-	userServiceLogger.Debug("[USER] %+v", u)
 
 	userWriter.Lock()
 	defer userWriter.Unlock()
@@ -130,8 +125,6 @@ func startCleanupUserService() {
 func userServiceTick() {
 	userWriter.Lock()
 	defer userWriter.Unlock()
-
-	userServiceLogger.Debug("Running user service cleanup")
 
 	newListing := make(map[string]*user)
 

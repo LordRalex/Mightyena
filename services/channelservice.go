@@ -1,7 +1,7 @@
-package core
+package services
 
 import (
-	"github.com/lordralex/mightyena/logging"
+	"github.com/lordralex/mightyena/core"
 	"github.com/thoj/go-ircevent"
 	"strings"
 	"sync"
@@ -12,7 +12,15 @@ var namesBuffer = make(map[string][]string)
 
 var channelWriter = sync.RWMutex{}
 
-var chanServiceLogger = logging.GetLogger("CHAN SERVICE")
+func GetChannel(chanName string) core.Channel {
+	return getChannel(chanName)
+}
+
+func getChannel(chanName string) *channel {
+	channelWriter.RLock()
+	defer channelWriter.RUnlock()
+	return channelCache[chanName]
+}
 
 func handleNamesEventChannelService(event *irc.Event) {
 	//discard first 2 args
@@ -60,14 +68,6 @@ func handleNamesEndEventChannelService(event *irc.Event) {
 	defer channelWriter.Unlock()
 	channelCache[channelName] = channel
 
-	whoisList := make([]string, len(channel.users))
-
-	chanServiceLogger.Debug("Channel: %s", channelName)
-	for k, v := range channelCache[channelName].users {
-		chanServiceLogger.Debug("  User: %s", v)
-		whoisList[k] = v
-	}
-
 	event.Connection.SendRaw("WHO " + channelName)
 }
 
@@ -75,10 +75,9 @@ func handlePartEventChannelService(event *irc.Event) {
 	nickname := event.Nick
 	channelName := event.Arguments[0]
 
+	channelWriter.Lock()
+	defer channelWriter.Unlock()
 	if event.Nick == event.Connection.GetNick() {
-		channelWriter.Lock()
-		defer channelWriter.Unlock()
-
 		channelCache[channelName] = nil
 		newList := make(map[string]*channel)
 		for k, v := range newList {
@@ -95,6 +94,9 @@ func handlePartEventChannelService(event *irc.Event) {
 
 func handleQuitEventChannelService(event *irc.Event) {
 	nick := event.Nick
+
+	channelWriter.Lock()
+	defer channelWriter.Unlock()
 
 	//remove user from all channels we know of
 	for _, v := range channelCache {

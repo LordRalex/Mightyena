@@ -2,9 +2,10 @@ package main
 
 import (
 	"github.com/lordralex/mightyena/config"
-	"github.com/lordralex/mightyena/core"
 	"github.com/lordralex/mightyena/database"
+	"github.com/lordralex/mightyena/listeners"
 	"github.com/lordralex/mightyena/logging"
+	"github.com/lordralex/mightyena/services"
 	"github.com/thoj/go-ircevent"
 	"os"
 	"time"
@@ -41,7 +42,7 @@ func main() {
 	bot.UseTLS = true
 	bot.RequestCaps = append(bot.RequestCaps, "account-notify")
 
-	core.CreateServiceHandlers(bot)
+	services.CreateServiceHandlers(bot)
 	err = bot.Connect(server)
 	if err != nil {
 		logger.Error(err.Error())
@@ -60,9 +61,8 @@ func main() {
 		logger.Warning("No channel specified")
 	}
 
-	bot.Loop()
-}
+	//test message event listener
+	listeners.RegisterTest()
 
-func Shutdown() {
-	bot.Disconnect()
+	bot.Loop()
 }
