@@ -15,23 +15,21 @@ var bot *irc.Connection
 var logger = logging.GetLogger("CORE")
 
 func main() {
-	logger.Log(logging.Debug, "%v", os.Args)
-
 	coreConfig, err := config.Get("core", "json")
 	if err != nil {
-		logger.Log(logging.Error, err.Error())
+		logger.Error(err.Error())
 		return
 	}
 
 	dbUrl, err := coreConfig.GetString("database")
 	if err != nil {
-		logger.Log(logging.Error, err.Error())
+		logger.Error(err.Error())
 		return
 	}
 
 	err = database.CreatePool(dbUrl)
 	if err != nil {
-		logger.Log(logging.Error, err.Error())
+		logger.Error(err.Error())
 		return
 	}
 
@@ -46,18 +44,20 @@ func main() {
 	core.CreateServiceHandlers(bot)
 	err = bot.Connect(server)
 	if err != nil {
-		logger.Log(logging.Error, err.Error())
+		logger.Error(err.Error())
 		return
 	}
 
 	if len(os.Args) > 1 {
 		go func() {
 			time.Sleep(3 * time.Second)
-			logger.Log(logging.Info, "Joining %s", os.Args[1])
-			bot.Join(os.Args[1])
+			for _, v := range os.Args[1:] {
+				logger.Info("Joining %s", v)
+				bot.Join(v)
+			}
 		}()
 	} else {
-		logger.Log(logging.Info, "No channel specified")
+		logger.Warning("No channel specified")
 	}
 
 	bot.Loop()

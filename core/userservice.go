@@ -25,14 +25,14 @@ func getUser(nickname string) *user {
 
 func handleJoinEventUserService(event *irc.Event) {
 	//user already exists in the cache, don't need to process
-	if u  := getUser(event.Nick); u != nil {
+	if u := getUser(event.Nick); u != nil {
 		return
 	}
 
 	user := &user{
-		nickname: event.Nick,
-		host: event.Host,
-		loginName: event.User,
+		nickname:     event.Nick,
+		host:         event.Host,
+		loginName:    event.User,
 		nickservName: "",
 	}
 
@@ -44,7 +44,7 @@ func handleJoinEventUserService(event *irc.Event) {
 func handleQuitEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	if u := getUser(event.Nick); u == nil {
-		userServiceLogger.Log(logging.Info, "User not in the cache when they quit: [%s]", event.Nick)
+		userServiceLogger.Info("User not in the cache when they quit: [%s]", event.Nick)
 		return
 	}
 
@@ -61,7 +61,7 @@ func handleNickEventUserService(event *irc.Event) {
 	//user never was in the cache, should not happen though...
 	var user *user
 	if user = getUser(event.Nick); user == nil {
-		userServiceLogger.Log(logging.Info,"User not in the cache when they changed nicks: [%s]", event.Nick)
+		userServiceLogger.Info("User not in the cache when they changed nicks: [%s]", event.Nick)
 		return
 	}
 
@@ -96,9 +96,9 @@ func startCleanupUserService() {
 	go func() {
 		for {
 			select {
-			case <- ticker.C:
+			case <-ticker.C:
 				userServiceTick()
-			case <- quit:
+			case <-quit:
 				ticker.Stop()
 				return
 			}
@@ -110,7 +110,7 @@ func userServiceTick() {
 	userWriter.Lock()
 	defer userWriter.Unlock()
 
-	userServiceLogger.Log(logging.Debug, "Running user service cleanup")
+	userServiceLogger.Debug("Running user service cleanup")
 
 	newListing := make(map[string]*user)
 

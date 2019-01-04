@@ -60,9 +60,9 @@ func handleNamesEndEventChannelService(event *irc.Event) {
 	defer channelWriter.Unlock()
 	channelCache[channelName] = channel
 
-	chanServiceLogger.Log(logging.Debug, "Channel: %s", channelName)
+	chanServiceLogger.Debug("Channel: %s", channelName)
 	for _, v := range channelCache[channelName].users {
-		chanServiceLogger.Log(logging.Debug, "  User: %s", v)
+		chanServiceLogger.Debug("  User: %s", v)
 	}
 }
 
