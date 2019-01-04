@@ -91,22 +91,24 @@ func handlePartEventUserService(event *irc.Event) {
 }
 
 func handleWhoEventUserService(event *irc.Event) {
-	userServiceLogger.Debug("%+v", event)
+	nick := event.Arguments[0]
+	userName := event.Arguments[2]
+	host := event.Arguments[3]
 
-	u := userCache[event.Nick]
+	u := userCache[nick]
 
 	if u == nil {
 		u = &user{}
 	}
 
-	u.nickname = event.Nick
-	u.loginName = event.User
-	u.host = event.Host
+	u.nickname = nick
+	u.loginName = userName
+	u.host = host
 	userServiceLogger.Debug("[USER] %+v", u)
-	
+
 	userWriter.Lock()
 	defer userWriter.Unlock()
-	userCache[event.Nick] = u
+	userCache[nick] = u
 }
 
 func startCleanupUserService() {
