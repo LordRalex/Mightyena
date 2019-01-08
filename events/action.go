@@ -20,6 +20,10 @@ type action struct {
 	connection *irc.Connection
 }
 
+func CreateActionEvent(connection *irc.Connection, a string, user core.User, channel core.Channel) Action {
+	return &action{action: a, user: user, channel: channel, connection: connection}
+}
+
 func (a *action) Connection() *irc.Connection {
 	return a.connection
 }

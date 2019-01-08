@@ -20,6 +20,10 @@ type message struct {
 	connection *irc.Connection
 }
 
+func CreateMessageEvent(connection *irc.Connection, msg string, user core.User, channel core.Channel) Message {
+	return &message{connection: connection, user: user, message: msg, channel: channel}
+}
+
 func (m *message) EventName() string {
 	return "message"
 }

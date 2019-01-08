@@ -17,6 +17,9 @@ func GetChannel(chanName string) core.Channel {
 }
 
 func getChannel(chanName string) *channel {
+	if chanName == "" {
+		return nil
+	}
 	channelWriter.RLock()
 	defer channelWriter.RUnlock()
 	return channelCache[chanName]
