@@ -12,6 +12,8 @@ var userCache = make(map[string]*user)
 
 var userWriter = sync.RWMutex{}
 
+var userLogger = logging.GetLogger("USER-SVC")
+
 func GetUser(nickname string) core.User {
 	return getUser(nickname)
 }
@@ -106,7 +108,7 @@ func handleWhoEventUserService(event *irc.Event) {
 	defer userWriter.Unlock()
 	userCache[nick] = u
 
-	logging.GetLogger("USER SVC").Debug("Added to cache: %+v", userCache[nick])
+	userLogger.Debug("Added to cache: %+v", userCache[nick])
 }
 
 func startCleanupUserService() {

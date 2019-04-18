@@ -3,7 +3,6 @@ package config
 type Configuration interface {
 	GetString(key string) (string, error)
 	GetStringList(key string) ([]string, error)
-	GetStringMap(key string) (map[string]string, error)
 	GetInt(key string) (int, error)
 	GetBoolean(key string) (bool, error)
 }
@@ -19,15 +18,23 @@ func Get(name, configType string) (config Configuration, err error) {
 	switch configType {
 	case "mysql":
 		{
-			config, err = createMySQLConfiguration()
+			config, err = createMySQLConfiguration(name)
 		}
 	case "json":
 		{
 			config, err = createJsonConfiguration("config/" + name + ".json")
+		}
+	case "env":
+		{
+			config, err = createEnvConfiguration(name)
 		}
 	}
 
 	cache[name] = config
 
 	return
+}
+
+func generateKey(prefix, key string) string {
+	return prefix + "_" + key
 }

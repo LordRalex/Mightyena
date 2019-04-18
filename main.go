@@ -16,7 +16,7 @@ var bot *irc.Connection
 var logger = logging.GetLogger("CORE")
 
 func main() {
-	coreConfig, err := config.Get("core", "json")
+	coreConfig, err := config.Get("core", "env")
 	if err != nil {
 		logger.Error(err.Error())
 		return
@@ -63,6 +63,7 @@ func main() {
 
 	//test message event listener
 	listeners.RegisterTest()
+	listeners.RegisterModules()
 
 	bot.Loop()
 }

@@ -91,3 +91,9 @@ func wrapVoice(function func(message events.Voice)) func(events.Event){
 		function(event.(events.Voice))
 	}
 }
+
+func wrapQuit(function func(message events.Quit)) func(event events.Event) {
+	return func(event events.Event) {
+		function(event.(events.Quit))
+	}
+}

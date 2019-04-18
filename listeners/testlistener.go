@@ -14,11 +14,11 @@ func RegisterTest() {
 
 func messageEvent(event events.Message) {
 	testLogger.Debug("RECEIVED: %+v", event)
-	testLogger.Info("FROM: %s", event.User().Nickname())
+	testLogger.Debug("FROM: %s", event.User().Nickname())
 	if event.Channel() != nil {
-		testLogger.Info("CHANNEL: %s", event.Channel().Name())
+		testLogger.Debug("CHANNEL: %s", event.Channel().Name())
 	} else {
-		testLogger.Info("CHANNEL: NONE")
+		testLogger.Debug("CHANNEL: NONE")
 	}
-	testLogger.Info("MESSAGE: %s", event.Message())
+	testLogger.Debug("MESSAGE: %s", event.Message())
 }

@@ -6,7 +6,7 @@ import (
 )
 
 var listenerMapping = make(map[string]map[string][]func(events.Event))
-var eventLogger = logging.GetLogger("EVENT SERVICE")
+var eventLogger = logging.GetLogger("EVENT-SVC")
 
 func register(eventName string, moduleName string, function func(event events.Event)) {
 	if listenerMapping[eventName] == nil {
@@ -23,7 +23,14 @@ func fireEvent(event events.Event) {
 	for k, f := range executors {
 		eventLogger.Debug("Running executors for %s", k)
 		for _, function := range f {
-			function(event)
+			func() {
+				defer func() {
+					if err := recover(); err != nil {
+						eventLogger.Error("Error running event %s: %s", event.EventName(), err)
+					}
+				}()
+				function(event)
+			}()
 		}
 	}
 }
