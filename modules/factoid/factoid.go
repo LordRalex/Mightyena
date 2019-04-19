@@ -51,12 +51,14 @@ func handle(event events.Command, prefix, key string, channel core.Channel, user
 	var target string
 	if channel != nil {
 		target = channel.Name()
+		for _, v := range factoidInfo {
+			event.Connection().Privmsgf(target, messageFormat, prefix, format.ParseFromBBCode(v))
+		}
 	} else {
 		target = user.Nickname()
-	}
-
-	for _, v := range factoidInfo {
-		event.Connection().Privmsgf(target, messageFormat, prefix, format.ParseFromBBCode(v))
+		for _, v := range factoidInfo {
+			event.Connection().Noticef(target, messageFormat, prefix, format.ParseFromBBCode(v))
+		}
 	}
 }
 
@@ -69,7 +71,7 @@ func getFactoid(key string) []string {
 	if res.Error != nil {
 		return nil
 	}
-	
+
 	if data.Content == "" {
 		return nil
 	}
