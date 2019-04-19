@@ -1,27 +1,63 @@
 package factoid
 
 import (
+	"github.com/lordralex/mightyena/core"
 	"github.com/lordralex/mightyena/database"
 	"github.com/lordralex/mightyena/events"
+	"github.com/lordralex/mightyena/format"
 	"github.com/lordralex/mightyena/services"
-	"regexp"
 	"strings"
 )
 
 const ModuleName = "factoids"
 
-var Bold = regexp.MustCompile(`\[/?b\]`)
-var Underline = regexp.MustCompile(`\[/?u\]`)
+var messageFormat string
 
-func Load() {
-	services.RegisterCommand(ModuleName, ">", globalHandle)
-	services.RegisterCommand(ModuleName, "<", globalHandle)
-	services.RegisterCommand(ModuleName, ".", globalHandle)
-	services.RegisterCommand(ModuleName, "", globalHandle)
+func init() {
+	messageFormat = format.IrcBold + "%s:" + format.IrcPlain + " %s"
 }
 
-func globalHandle(command events.Command) {
+func Load() {
+	services.RegisterCommand(ModuleName, ">", handleToUser)
+	services.RegisterCommand(ModuleName, "<", handleToSelf)
+	services.RegisterCommand(ModuleName, ".", handleToChannel)
+	services.RegisterCommand(ModuleName, "", handleToChannel)
+}
 
+func handleToUser(event events.Command) {
+	if event.Channel() == nil {
+		return
+	}
+
+	handle(event, event.Arguments()[0], event.Arguments()[0], event.Channel(), event.User())
+}
+
+func handleToSelf(event events.Command) {
+	handle(event, event.Arguments()[0], event.Arguments()[0], nil, event.User())
+}
+
+func handleToChannel(event events.Command) {
+	handle(event, event.Arguments()[0], event.Arguments()[0], event.Channel(), event.User())
+}
+
+func handle(event events.Command, prefix, key string, channel core.Channel, user core.User) {
+	factoidInfo := getFactoid(key)
+
+	if factoidInfo == nil || len(factoidInfo) == 0{
+		event.Connection().Noticef(user.Nickname(), "No factoid with name (%s) found", key)
+		return
+	}
+
+	var target string
+	if channel != nil {
+		target = channel.Name()
+	} else {
+		target = user.Nickname()
+	}
+
+	for _, v := range factoidInfo {
+		event.Connection().Privmsgf(target, messageFormat, prefix, format.ParseFromBBCode(v))
+	}
 }
 
 func getFactoid(key string) []string {
@@ -31,7 +67,7 @@ func getFactoid(key string) []string {
 
 	res := db.Table("factoids").Where(data).FirstOrInit(data)
 	if res.Error != nil {
-		return make([]string, 0)
+		return nil
 	}
 
 	return strings.Split(data.Content, "|")
