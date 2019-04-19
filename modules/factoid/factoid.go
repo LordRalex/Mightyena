@@ -63,7 +63,7 @@ func handle(event events.Command, prefix, key string, channel core.Channel, user
 func getFactoid(key string) []string {
 	db := database.GetConnection()
 
-	data := &factoid{Key: strings.ToLower(key)}
+	data := &factoid{Name: strings.ToLower(key)}
 
 	res := db.Table("factoids").Where(data).FirstOrInit(data)
 	if res.Error != nil {
@@ -74,6 +74,6 @@ func getFactoid(key string) []string {
 }
 
 type factoid struct {
-	Key     string `gorm:"name"`
+	Name     string `gorm:"name"`
 	Content string `gorm:"content"`
 }
