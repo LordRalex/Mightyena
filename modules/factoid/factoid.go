@@ -43,7 +43,7 @@ func handleToChannel(event events.Command) {
 func handle(event events.Command, prefix, key string, channel core.Channel, user core.User) {
 	factoidInfo := getFactoid(key)
 
-	if factoidInfo == nil || len(factoidInfo) == 0{
+	if factoidInfo == nil || len(factoidInfo) == 0 {
 		event.Connection().Noticef(user.Nickname(), "No factoid with name (%s) found", key)
 		return
 	}
@@ -69,11 +69,15 @@ func getFactoid(key string) []string {
 	if res.Error != nil {
 		return nil
 	}
+	
+	if data.Content == "" {
+		return nil
+	}
 
 	return strings.Split(data.Content, "|")
 }
 
 type factoid struct {
-	Name     string `gorm:"name"`
+	Name    string `gorm:"name"`
 	Content string `gorm:"content"`
 }
