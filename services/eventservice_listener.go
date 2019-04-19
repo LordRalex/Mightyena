@@ -47,4 +47,6 @@ func fireCommandEvent(event events.Message) {
 
 	evt := events.CreateCommandEvent(event.Connection(), parts[0], parts[1:], event.User(), event.Channel())
 	fireEvent(evt)
+
+	executeCommand(evt)
 }

@@ -17,6 +17,8 @@ func executeCommand(event events.Command) {
 
 	if cmd != nil {
 		cmd.executor(event)
+	} else {
+		event.Connection().Privmsgf(event.User().Nickname(), "No such command (%s)", event.Command())
 	}
 }
 
