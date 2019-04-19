@@ -29,7 +29,7 @@ func handleToUser(event events.Command) {
 		return
 	}
 
-	handle(event, event.Arguments()[1], event.Arguments()[0], event.Channel(), event.User())
+	handle(event, event.Arguments()[0], event.Arguments()[1], event.Channel(), event.User())
 }
 
 func handleToSelf(event events.Command) {
