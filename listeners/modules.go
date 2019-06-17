@@ -1,15 +1,7 @@
 package listeners
 
-import (
-	"github.com/lordralex/mightyena/modules/antispam"
-	"github.com/lordralex/mightyena/modules/factoid"
-	"github.com/lordralex/mightyena/modules/webclient"
-	"github.com/lordralex/mightyena/modules/welcome"
-)
+import "github.com/lordralex/mightyena/modules"
 
 func RegisterModules() {
-	antispam.Load()
-	factoid.Load()
-	webclient.Load()
-	welcome.Load()
+	modules.Load()
 }

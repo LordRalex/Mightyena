@@ -60,7 +60,7 @@ func runJoin(event events.Join) {
 				msg = "Client not permitted"
 			}
 			banMask := "*!" + event.User().LoginName() + "@" + event.User().Hostname()
-			event.Connection().Mode(banMask, "+b")
+			event.Connection().Mode(event.Channel().Name(), "+b "+banMask)
 			event.Connection().Kick(event.User().Nickname(), event.Channel().Name(), msg)
 			break
 		}
