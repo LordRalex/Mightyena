@@ -10,12 +10,7 @@ import (
 )
 
 const ModuleName = "factoids"
-
-var messageFormat string
-
-func init() {
-	messageFormat = format.IrcBold + "%s:" + format.IrcPlain + " %s"
-}
+const messageFormat = format.IrcBold + "%s:" + format.IrcPlain + " %s"
 
 func Load() {
 	services.RegisterCommand(ModuleName, ">", handleToUser)

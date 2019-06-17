@@ -12,14 +12,16 @@ type Command interface {
 	Arguments() []string
 	User() core.User
 	Channel() core.Channel
+
+	Respond(message string)
 }
 
 type command struct {
 	connection *irc.Connection
-	command string
-	arguments []string
-	user core.User
-	channel core.Channel
+	command    string
+	arguments  []string
+	user       core.User
+	channel    core.Channel
 }
 
 func CreateCommandEvent(connection *irc.Connection, cmd string, arguments []string, user core.User, channel core.Channel) Command {
@@ -48,4 +50,12 @@ func (c *command) Connection() *irc.Connection {
 
 func (c *command) EventName() string {
 	return "command"
+}
+
+func (c *command) Respond(message string) {
+	if c.Channel() != nil {
+		c.Connection().Privmsg(c.Channel().Name(), message)
+	} else {
+		c.Connection().Privmsg(c.User().Nickname(), message)
+	}
 }
