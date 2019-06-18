@@ -24,11 +24,6 @@ func runCommand(e events.Command) {
 
 func execute(event events.Command, addr string) {
 	cmd := exec.Command("mcstatus", addr, "status")
-	err := cmd.Run()
-	if err != nil {
-		event.Respond(fmt.Sprintf("Error: %s", err.Error()))
-		return
-	}
 	out, err := cmd.Output()
 	if err != nil {
 		event.Respond(fmt.Sprintf("Error: %s", err.Error()))
