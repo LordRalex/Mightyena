@@ -6,6 +6,7 @@ import (
 	"github.com/lordralex/mightyena/events"
 	"github.com/lordralex/mightyena/services"
 	"os/exec"
+	"strings"
 )
 
 const ModuleName = "mcping"
@@ -23,7 +24,7 @@ func runCommand(e events.Command) {
 }
 
 func execute(event events.Command, addr string) {
-	cmd := exec.Command("mcstatus", addr, "status")
+	cmd := exec.Command("python", "mcping.py", addr)
 	out, err := cmd.Output()
 	if err != nil {
 		event.Respond(fmt.Sprintf("Error: %s", err.Error()))
@@ -31,5 +32,5 @@ func execute(event events.Command, addr string) {
 	}
 	var buf bytes.Buffer
 	buf.Write(out)
-	event.Respond(buf.String())
+	event.Respond(strings.Replace(buf.String(), "\n", " - ", -1))
 }
