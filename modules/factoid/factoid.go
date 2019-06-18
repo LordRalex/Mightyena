@@ -71,7 +71,7 @@ func getFactoid(key string) []string {
 		return nil
 	}
 
-	return strings.Split(data.Content, "\n")
+	return strings.Split(data.Content, ";;")
 }
 
 type factoid struct {

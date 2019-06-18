@@ -9,6 +9,7 @@ RUN \
     rm -rf /go/src && \
     apk add --no-cache py-pip && \
     pip install mcstatus && \
+    mcstatus -h && \
     apk del git
 
 CMD ["mightyena"]

@@ -9,6 +9,7 @@ var db *gorm.DB
 
 func CreatePool(connectionString string) (err error) {
 	db, err = gorm.Open("mysql", connectionString)
+	db.LogMode(true)
 	return
 }
 
