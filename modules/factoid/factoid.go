@@ -71,7 +71,15 @@ func getFactoid(key string) []string {
 		return nil
 	}
 
-	return strings.Split(data.Content, ";;")
+	parts := strings.Split(data.Content, ";;")
+	cleaned := make([]string, 0)
+	for _, v := range parts {
+		if strings.TrimSpace(v) != "" {
+			cleaned = append(cleaned, v)
+		}
+	}
+
+	return cleaned
 }
 
 type factoid struct {
