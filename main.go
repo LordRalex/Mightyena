@@ -8,7 +8,6 @@ import (
 	"github.com/lordralex/mightyena/services"
 	"github.com/thoj/go-ircevent"
 	"os"
-	"time"
 )
 
 var bot *irc.Connection
@@ -49,17 +48,24 @@ func main() {
 		return
 	}
 
-	if len(os.Args) > 1 {
+	var id int
+	id = bot.AddCallback("001 WELCOME", func(e *irc.Event) {
 		go func() {
-			time.Sleep(3 * time.Second)
+			bot.RemoveCallback("001 WELCOME", id)
+
+			nickserv, _ := coreConfig.GetString("nickserv")
+			pw, _ := coreConfig.GetString("password")
+
+			if nickserv != "" && pw != "" {
+				bot.Privmsg("nickserv", "IDENTIFY " + nickserv + " " + pw)
+			}
+
 			for _, v := range os.Args[1:] {
 				logger.Info("Joining %s", v)
 				bot.Join(v)
 			}
 		}()
-	} else {
-		logger.Warning("No channel specified")
-	}
+	})
 
 	//test message event listener
 	listeners.RegisterTest()
