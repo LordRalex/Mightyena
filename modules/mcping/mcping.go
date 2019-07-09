@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/lordralex/mightyena/events"
+	"github.com/lordralex/mightyena/services"
 	"os/exec"
 	"strings"
 )
@@ -11,7 +12,7 @@ import (
 const ModuleName = "mcping"
 
 func Load() {
-	//services.RegisterCommand(ModuleName, "mcping", runCommand)
+	services.RegisterCommand(ModuleName, "mcping", runCommand)
 }
 
 func runCommand(e events.Command) {
