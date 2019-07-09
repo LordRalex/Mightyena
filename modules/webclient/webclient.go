@@ -19,7 +19,7 @@ func Load() {
 func runJoin(event events.Join) {
 	cfg, err := config.Get(ModuleName, "mysql")
 	if err != nil {
-		Logger.Error("Error getting channel list: %s", err.Error())
+		Logger.Error("Error loading config: %s", err.Error())
 		return
 	}
 
