@@ -19,9 +19,9 @@ func (fc *mySQLConfiguration) GetString(key string) (string, error) {
 	db := database.GetConnection()
 	setting := &dbSetting{}
 
-	db.Table("settings").Where("key = ?", generateKey(fc.prefix, key)).FirstOrInit(&setting)
+	res := db.Table("settings").Where("key = ?", generateKey(fc.prefix, key)).FirstOrInit(&setting)
 
-	return setting.Value, nil
+	return setting.Value, res.Error
 }
 
 func (fc *mySQLConfiguration) GetStringList(key string) ([]string, error) {

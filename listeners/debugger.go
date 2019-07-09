@@ -6,10 +6,10 @@ import (
 	"github.com/lordralex/mightyena/services"
 )
 
-var testLogger = logging.GetLogger("TEST")
+var testLogger = logging.GetLogger("DEBUG")
 
 func RegisterTest() {
-	services.RegisterMessage("test", messageEvent)
+	services.RegisterMessage("debug", messageEvent)
 }
 
 func messageEvent(event events.Message) {
