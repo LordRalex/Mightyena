@@ -43,6 +43,9 @@ func fireMessageEvent(event *irc.Event) {
 
 func fireCommandEvent(event events.Message) {
 	parts := strings.Split(event.Message(), " ")
+	if len(parts) < 2 {
+		return
+	}
 	parts[0] = strings.TrimPrefix(parts[0], commandPrefix)
 
 	evt := events.CreateCommandEvent(event.Connection(), parts[0], parts[1:], event.User(), event.Channel())
