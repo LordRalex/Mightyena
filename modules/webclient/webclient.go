@@ -4,7 +4,6 @@ import (
 	"github.com/lordralex/mightyena/config"
 	"github.com/lordralex/mightyena/events"
 	"github.com/lordralex/mightyena/logging"
-	"github.com/lordralex/mightyena/services"
 	"regexp"
 )
 
@@ -13,7 +12,7 @@ const ModuleName = "webclient"
 var Logger = logging.GetLogger(ModuleName)
 
 func Load() {
-	services.RegisterJoin(ModuleName, runJoin)
+	//services.RegisterJoin(ModuleName, runJoin)
 }
 
 func runJoin(event events.Join) {
