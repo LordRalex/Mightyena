@@ -4,7 +4,6 @@ import (
 	"github.com/lordralex/mightyena/modules/antispam"
 	"github.com/lordralex/mightyena/modules/factoid"
 	"github.com/lordralex/mightyena/modules/remove"
-	"github.com/lordralex/mightyena/modules/webclient"
 	"github.com/lordralex/mightyena/modules/welcome"
 )
 
@@ -13,6 +12,6 @@ func Load() {
 	factoid.Load()
 	//mcping.Load()
 	remove.Load()
-	webclient.Load()
+	//webclient.Load()
 	welcome.Load()
 }

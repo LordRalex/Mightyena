@@ -48,23 +48,18 @@ func main() {
 		return
 	}
 
-	var id int
-	id = bot.AddCallback("001 WELCOME", func(e *irc.Event) {
-		go func() {
-			bot.RemoveCallback("001 WELCOME", id)
+	bot.AddCallback("001 WELCOME", func(e *irc.Event) {
+		nickserv, _ := coreConfig.GetString("nickserv")
+		pw, _ := coreConfig.GetString("password")
 
-			nickserv, _ := coreConfig.GetString("nickserv")
-			pw, _ := coreConfig.GetString("password")
+		if nickserv != "" && pw != "" {
+			bot.Privmsg("nickserv", "IDENTIFY "+nickserv+" "+pw)
+		}
 
-			if nickserv != "" && pw != "" {
-				bot.Privmsg("nickserv", "IDENTIFY " + nickserv + " " + pw)
-			}
-
-			for _, v := range os.Args[1:] {
-				logger.Info("Joining %s", v)
-				bot.Join(v)
-			}
-		}()
+		for _, v := range os.Args[1:] {
+			logger.Info("Joining %s", v)
+			bot.Join(v)
+		}
 	})
 
 	//test message event listener
