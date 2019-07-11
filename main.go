@@ -48,7 +48,7 @@ func main() {
 		return
 	}
 
-	bot.AddCallback("001 WELCOME", func(e *irc.Event) {
+	bot.AddCallback("376", func(e *irc.Event) {
 		nickserv, _ := coreConfig.GetString("nickserv")
 		pw, _ := coreConfig.GetString("password")
 
