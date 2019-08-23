@@ -24,14 +24,45 @@ func handleToUser(event events.Command) {
 		return
 	}
 
-	handle(event, event.Arguments()[0], event.Arguments()[1], event.Channel(), event.User())
+	if len(event.Arguments()) < 2 {
+		return
+	}
+
+	var key string
+	for i := 1; i < len(event.Arguments()) && key == ""; i++ {
+		key = event.Arguments()[i]
+	}
+
+	if key == "" {
+		return
+	}
+
+	handle(event, event.Arguments()[0], key, event.Channel(), event.User())
 }
 
 func handleToSelf(event events.Command) {
+	var key string
+	for i := 0; i < len(event.Arguments()) && key == ""; i++ {
+		key = event.Arguments()[i]
+	}
+
+	if key == "" {
+		return
+	}
+
 	handle(event, event.Arguments()[0], event.Arguments()[0], nil, event.User())
 }
 
 func handleToChannel(event events.Command) {
+	var key string
+	for i := 0; i < len(event.Arguments()) && key == ""; i++ {
+		key = event.Arguments()[i]
+	}
+
+	if key == "" {
+		return
+	}
+
 	handle(event, event.Arguments()[0], event.Arguments()[0], event.Channel(), event.User())
 }
 
