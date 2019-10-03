@@ -5,32 +5,14 @@ import (
 	"github.com/thoj/go-ircevent"
 )
 
-type Quit interface {
+type Quit struct {
 	Event
 
-	User() core.User
-	Channel() core.Channel
-	Message() string
+	Connection *irc.Connection
+	User       core.User
+	Message    string
 }
 
-type quit struct {
-	connection *irc.Connection
-	user core.User
-	message string
-}
-
-func (q *quit) Message() string {
-	return q.message
-}
-
-func (q *quit) User() core.User {
-	return q.user
-}
-
-func (q *quit) Connection() *irc.Connection {
-	return q.connection
-}
-
-func (q *quit) EventName() string {
+func (q *Quit) EventName() string {
 	return "quit"
 }

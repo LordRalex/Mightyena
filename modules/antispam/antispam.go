@@ -30,25 +30,25 @@ func handleMessageEvent(event events.Message) {
 	locker.Lock()
 	defer locker.Unlock()
 
-	data, exists := messageHistory[event.User().Nickname()]
+	data, exists := messageHistory[event.User.Nickname()]
 	if !exists {
 		data = make([]*messageData, 0)
 	}
 
-	data = append(data, &messageData{message: event.Message(), time: time.Now()})
-	messageHistory[event.User().Nickname()] = data
+	data = append(data, &messageData{message: event.Message, time: time.Now()})
+	messageHistory[event.User.Nickname()] = data
 }
 
 func handleKickEvent(kick events.Kick) {
-	deleteFromCache(kick.Target().Nickname())
+	deleteFromCache(kick.Target.Nickname())
 }
 
 func handlePartEvent(part events.Part) {
-	deleteFromCache(part.User().Nickname())
+	deleteFromCache(part.User.Nickname())
 }
 
 func handleQuitEvent(part events.Part) {
-	deleteFromCache(part.User().Nickname())
+	deleteFromCache(part.User.Nickname())
 }
 
 func deleteFromCache(key string) {

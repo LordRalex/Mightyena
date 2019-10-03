@@ -9,20 +9,20 @@ var commands = make(map[string]*registeredCommand)
 
 type registeredCommand struct {
 	module   string
-	executor func(events.Command)
+	executor func(*events.Command)
 }
 
-func executeCommand(event events.Command) {
-	cmd := commands[strings.ToLower(event.Command())]
+func executeCommand(event *events.Command) {
+	cmd := commands[strings.ToLower(event.Command)]
 
 	if cmd != nil {
 		cmd.executor(event)
 	} else {
-		event.Connection().Privmsgf(event.User().Nickname(), "No such command (%s)", event.Command())
+		event.Connection.Privmsgf(event.User.Nickname(), "No such command (%s)", event.Command)
 	}
 }
 
-func RegisterCommand(module, command string, function func(events.Command)) {
+func RegisterCommand(module, command string, function func(*events.Command)) {
 	commands[strings.ToLower(command)] = &registeredCommand{
 		module:   module,
 		executor: function,

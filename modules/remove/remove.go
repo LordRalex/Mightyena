@@ -20,25 +20,25 @@ func Load() {
 	services.RegisterCommand(ModuleName, "terminate", runBan)
 }
 
-func runKick(event events.Command) {
+func runKick(event *events.Command) {
 	handle(event, false)
 }
 
-func runBan(event events.Command) {
+func runBan(event *events.Command) {
 	handle(event, true)
 }
 
-func handle(event events.Command, ban bool) {
-	if event.Channel() == nil {
+func handle(event *events.Command, ban bool) {
+	if event.Channel == nil {
 		return
 	}
 
-	if len(event.Arguments()) == 0 {
+	if len(event.Arguments) == 0 {
 		event.Respond("Username required")
 		return
 	}
 
-	if !event.Channel().HasVoiceOrOp(event.User().Nickname()) {
+	if !event.Channel.HasVoiceOrOp(event.User.Nickname()) {
 		return
 	}
 
@@ -57,7 +57,7 @@ func handle(event events.Command, ban bool) {
 	valid := false
 
 	for _, c := range channels {
-		if c == event.Channel().Name() {
+		if c == event.Channel.Name() {
 			valid = true
 			break
 		}
@@ -67,14 +67,14 @@ func handle(event events.Command, ban bool) {
 		return
 	}
 
-	msg := strings.Join(event.Arguments()[1:], " ")
+	msg := strings.Join(event.Arguments[1:], " ")
 	if msg == "" {
 		msg = "You have been removed from this channel"
 	}
 
-	event.Connection().Kick(event.User().Nickname(), event.Channel().Name(), msg)
+	event.Connection.Kick(event.User.Nickname(), event.Channel.Name(), msg)
 	if ban {
-		mask := "*!*@" + event.User().Hostname()
-		event.Connection().Mode(event.Channel().Name(), "+b "+mask)
+		mask := "*!*@" + event.User.Hostname()
+		event.Connection.Mode(event.Channel.Name(), "+b "+mask)
 	}
 }

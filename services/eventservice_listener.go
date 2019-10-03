@@ -31,7 +31,12 @@ func fireMessageEvent(event *irc.Event) {
 		channel = ""
 	}
 
-	evt := events.CreateMessageEvent(event.Connection, message, GetUser(nick), GetChannel(channel))
+	evt := &events.Message{
+		Message:    message,
+		User:       GetUser(nick),
+		Channel:    GetChannel(channel),
+		Connection: event.Connection,
+	}
 	fireEvent(evt)
 
 	//since messages can be events, we'll bounce off this one
@@ -41,14 +46,20 @@ func fireMessageEvent(event *irc.Event) {
 	}
 }
 
-func fireCommandEvent(event events.Message) {
-	parts := strings.Split(event.Message(), " ")
+func fireCommandEvent(event *events.Message) {
+	parts := strings.Split(event.Message, " ")
 	if len(parts) < 2 {
 		return
 	}
 	parts[0] = strings.TrimPrefix(parts[0], commandPrefix)
 
-	evt := events.CreateCommandEvent(event.Connection(), parts[0], parts[1:], event.User(), event.Channel())
+	evt := &events.Command{
+		Connection: event.Connection,
+		Command:    parts[0],
+		Arguments:  parts[1:],
+		User:       event.User,
+		Channel:    event.Channel,
+	}
 	fireEvent(evt)
 
 	executeCommand(evt)

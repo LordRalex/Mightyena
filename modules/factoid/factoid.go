@@ -19,58 +19,58 @@ func Load() {
 	services.RegisterCommand(ModuleName, "", handleToChannel)
 }
 
-func handleToUser(event events.Command) {
-	if event.Channel() == nil {
+func handleToUser(event *events.Command) {
+	if event.Channel == nil {
 		return
 	}
 
-	if len(event.Arguments()) < 2 {
+	if len(event.Arguments) < 2 {
 		return
 	}
 
 	var key string
-	for i := 1; i < len(event.Arguments()) && key == ""; i++ {
-		key = event.Arguments()[i]
+	for i := 1; i < len(event.Arguments) && key == ""; i++ {
+		key = event.Arguments[i]
 	}
 
 	if key == "" {
 		return
 	}
 
-	handle(event, event.Arguments()[0], key, event.Channel(), event.User())
+	handle(event, event.Arguments[0], key, event.Channel, event.User)
 }
 
-func handleToSelf(event events.Command) {
+func handleToSelf(event *events.Command) {
 	var key string
-	for i := 0; i < len(event.Arguments()) && key == ""; i++ {
-		key = event.Arguments()[i]
+	for i := 0; i < len(event.Arguments) && key == ""; i++ {
+		key = event.Arguments[i]
 	}
 
 	if key == "" {
 		return
 	}
 
-	handle(event, event.Arguments()[0], event.Arguments()[0], nil, event.User())
+	handle(event, event.Arguments[0], event.Arguments[0], nil, event.User)
 }
 
-func handleToChannel(event events.Command) {
+func handleToChannel(event *events.Command) {
 	var key string
-	for i := 0; i < len(event.Arguments()) && key == ""; i++ {
-		key = event.Arguments()[i]
+	for i := 0; i < len(event.Arguments) && key == ""; i++ {
+		key = event.Arguments[i]
 	}
 
 	if key == "" {
 		return
 	}
 
-	handle(event, event.Arguments()[0], event.Arguments()[0], event.Channel(), event.User())
+	handle(event, event.Arguments[0], event.Arguments[0], event.Channel, event.User)
 }
 
-func handle(event events.Command, prefix, key string, channel core.Channel, user core.User) {
+func handle(event *events.Command, prefix, key string, channel core.Channel, user core.User) {
 	factoidInfo := getFactoid(key)
 
 	if factoidInfo == nil || len(factoidInfo) == 0 {
-		event.Connection().Noticef(user.Nickname(), "No factoid with name (%s) found", key)
+		event.Connection.Noticef(user.Nickname(), "No factoid with name (%s) found", key)
 		return
 	}
 
@@ -78,12 +78,12 @@ func handle(event events.Command, prefix, key string, channel core.Channel, user
 	if channel != nil {
 		target = channel.Name()
 		for _, v := range factoidInfo {
-			event.Connection().Privmsgf(target, messageFormat, prefix, format.ParseFromBBCode(v))
+			event.Connection.Privmsgf(target, messageFormat, prefix, format.ParseFromBBCode(v))
 		}
 	} else {
 		target = user.Nickname()
 		for _, v := range factoidInfo {
-			event.Connection().Noticef(target, messageFormat, prefix, format.ParseFromBBCode(v))
+			event.Connection.Noticef(target, messageFormat, prefix, format.ParseFromBBCode(v))
 		}
 	}
 }

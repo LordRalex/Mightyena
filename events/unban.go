@@ -5,42 +5,15 @@ import (
 	"github.com/thoj/go-ircevent"
 )
 
-type Unban interface {
+type Unban struct {
 	Event
-
-	Channel() core.Channel
-	Banner() core.User
-	Mask() string
+	
+	Connection *irc.Connection
+	Mask       string
+	Banner     core.User
+	Channel    core.Channel
 }
 
-type unban struct {
-	connection *irc.Connection
-
-	mask string
-	banner core.User
-	channel core.Channel
-}
-
-func CreateUnbanEvent(connection *irc.Connection, mask string, banner core.User, channel core.Channel) Unban {
-	return &unban{connection: connection, mask: mask, banner: banner, channel: channel}
-}
-
-func (u *unban) Channel() core.Channel {
-	return u.channel
-}
-
-func (u *unban) Mask() string {
-	return u.mask
-}
-
-func (u *unban) Banner() core.User {
-	return u.banner
-}
-
-func (u *unban) Connection() *irc.Connection {
-	return u.connection
-}
-
-func (u *unban) EventName() string {
+func (u *Unban) EventName() string {
 	return "unban"
 }
