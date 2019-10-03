@@ -6,8 +6,6 @@ import (
 )
 
 type Op struct {
-	Event
-
 	Connection *irc.Connection
 	Channel    core.Channel
 	Target     core.User

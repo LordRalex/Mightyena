@@ -6,8 +6,6 @@ import (
 )
 
 type Part struct {
-	Event
-
 	Connection *irc.Connection
 	User       core.User
 	Channel    core.Channel

@@ -6,8 +6,6 @@ import (
 )
 
 type Kick struct {
-	Event
-
 	Connection *irc.Connection
 	Sender     core.User
 	Target     core.User

@@ -5,12 +5,15 @@ import (
 	"github.com/lordralex/mightyena/database"
 	"github.com/lordralex/mightyena/events"
 	"github.com/lordralex/mightyena/format"
+	"github.com/lordralex/mightyena/logging"
 	"github.com/lordralex/mightyena/services"
 	"strings"
 )
 
 const ModuleName = "factoids"
 const messageFormat = format.IrcBold + "%s:" + format.IrcPlain + " %s"
+
+var eventLogger = logging.GetLogger("FACTOIDS")
 
 func Load() {
 	services.RegisterCommand(ModuleName, ">", handleToUser)
@@ -74,6 +77,11 @@ func handle(event *events.Command, prefix, key string, channel core.Channel, use
 		return
 	}
 
+	eventLogger.Debug("Firing factoid")
+	eventLogger.Debug("%+v", key)
+	eventLogger.Debug("%+v", channel)
+	eventLogger.Debug("%+v", user)
+
 	var target string
 	if channel != nil {
 		target = channel.Name()
@@ -95,6 +103,7 @@ func getFactoid(key string) []string {
 
 	res := db.Table("factoids").Where(data).FirstOrInit(data)
 	if res.Error != nil {
+		eventLogger.Error("Error getting factoid %s: %s", key, res.Error)
 		return nil
 	}
 

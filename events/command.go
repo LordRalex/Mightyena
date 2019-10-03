@@ -6,8 +6,6 @@ import (
 )
 
 type Command struct {
-	Event
-
 	Connection *irc.Connection
 	Command    string
 	Arguments  []string

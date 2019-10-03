@@ -6,8 +6,6 @@ import (
 )
 
 type Action struct {
-	Event
-
 	Action     string
 	User       core.User
 	Channel    core.Channel

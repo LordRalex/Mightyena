@@ -6,8 +6,6 @@ import (
 )
 
 type Auth struct {
-	Event
-
 	Connection *irc.Connection
 	Account    string
 	User       core.User

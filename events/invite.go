@@ -6,8 +6,6 @@ import (
 )
 
 type Invite struct {
-	Event
-
 	Connection *irc.Connection
 	Channel    string
 	User       core.User

@@ -6,8 +6,6 @@ import (
 )
 
 type Unban struct {
-	Event
-	
 	Connection *irc.Connection
 	Mask       string
 	Banner     core.User

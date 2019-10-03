@@ -6,8 +6,6 @@ import (
 )
 
 type Message struct {
-	Event
-
 	Message    string
 	User       core.User
 	Channel    core.Channel

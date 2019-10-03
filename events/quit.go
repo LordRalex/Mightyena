@@ -6,8 +6,6 @@ import (
 )
 
 type Quit struct {
-	Event
-
 	Connection *irc.Connection
 	User       core.User
 	Message    string
