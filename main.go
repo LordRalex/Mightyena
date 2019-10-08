@@ -66,5 +66,5 @@ func main() {
 	listeners.RegisterTest()
 	listeners.RegisterModules()
 
-	bot.Loop()
+	bot.Wait()
 }
