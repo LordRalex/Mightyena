@@ -11,8 +11,8 @@ const ModuleName = "welcome"
 var mapping = make(map[string]string)
 
 func Load() {
-	//services.RegisterCommand(ModuleName, "welcome", runCommand)
-	//services.RegisterJoin(ModuleName, runJoin)
+	services.RegisterCommand(ModuleName, "welcome", runCommand)
+	services.RegisterJoin(ModuleName, runJoin)
 }
 
 func runCommand(event *events.Command) {
@@ -44,7 +44,7 @@ func runCommand(event *events.Command) {
 	}
 }
 
-func runJoin(event events.Join) {
+func runJoin(event *events.Join) {
 	message := mapping[event.Channel.Name()]
 
 	if message == "" {

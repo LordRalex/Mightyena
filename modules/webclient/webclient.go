@@ -4,6 +4,7 @@ import (
 	"github.com/lordralex/mightyena/config"
 	"github.com/lordralex/mightyena/events"
 	"github.com/lordralex/mightyena/logging"
+	"github.com/lordralex/mightyena/services"
 	"regexp"
 )
 
@@ -12,10 +13,10 @@ const ModuleName = "webclient"
 var Logger = logging.GetLogger(ModuleName)
 
 func Load() {
-	//services.RegisterJoin(ModuleName, runJoin)
+	services.RegisterJoin(ModuleName, runJoin)
 }
 
-func runJoin(event events.Join) {
+func runJoin(event *events.Join) {
 	cfg, err := config.Get(ModuleName, "mysql")
 	if err != nil {
 		Logger.Error("Error loading config: %s", err.Error())
@@ -30,7 +31,7 @@ func runJoin(event events.Join) {
 
 	protected := false
 	for _, c := range channels {
-		if c == event.Channel().Name() {
+		if c == event.Channel.Name() {
 			protected = true
 			break
 		}
@@ -46,7 +47,7 @@ func runJoin(event events.Join) {
 		return
 	}
 
-	conn := event.User().Nickname() + "!" + event.User().LoginName() + "@" + event.User().Hostname()
+	conn := event.User.Nickname() + "!" + event.User.LoginName() + "@" + event.User.Hostname()
 	for _, m := range masks {
 		reg, err := regexp.Compile(m)
 		if err != nil {
@@ -58,9 +59,9 @@ func runJoin(event events.Join) {
 			if err != nil || msg == "" {
 				msg = "Client not permitted"
 			}
-			banMask := "*!" + event.User().LoginName() + "@" + event.User().Hostname()
-			event.Connection().Mode(event.Channel().Name(), "+b "+banMask)
-			event.Connection().Kick(event.User().Nickname(), event.Channel().Name(), msg)
+			banMask := "*!" + event.User.LoginName() + "@" + event.User.Hostname()
+			event.Connection.Mode(event.Channel.Name(), "+b "+banMask)
+			event.Connection.Kick(event.User.Nickname(), event.Channel.Name(), msg)
 			break
 		}
 	}

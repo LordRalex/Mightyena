@@ -64,3 +64,33 @@ func fireCommandEvent(event *events.Message) {
 
 	executeCommand(evt)
 }
+
+func fireJoinEvent(event *irc.Event) {
+	eventLogger.Debug("Firing join event")
+	eventLogger.Debug("%+v", event)
+}
+
+func fireQuitEvent(event *irc.Event) {
+	eventLogger.Debug("Firing quit event")
+	eventLogger.Debug("%+v", event)
+}
+
+func firePartEvent(event *irc.Event) {
+	eventLogger.Debug("Firing part event")
+	eventLogger.Debug("%+v", event)
+}
+
+func fireKickEvent(event *irc.Event) {
+	eventLogger.Debug("Firing kick event")
+	eventLogger.Debug("%+v", event)
+}
+
+func fireNickEvent(event *irc.Event) {
+	eventLogger.Debug("Firing nick event")
+	eventLogger.Debug("%+v", event)
+}
+
+func fireWhoEvent(event *irc.Event) {
+	eventLogger.Debug("Firing who event")
+	eventLogger.Debug("%+v", event)
+}

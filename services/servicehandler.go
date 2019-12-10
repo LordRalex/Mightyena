@@ -19,6 +19,12 @@ func CreateServiceHandlers(connection *irc.Connection) {
 
 	//event handler
 	connection.AddCallback("PRIVMSG", fireMessageEvent)
+	connection.AddCallback("JOIN", fireJoinEvent)
+	connection.AddCallback("QUIT", fireQuitEvent)
+	connection.AddCallback("PART", firePartEvent)
+	connection.AddCallback("KICK", fireKickEvent)
+	connection.AddCallback("NICK", fireNickEvent)
+	connection.AddCallback("352", fireWhoEvent)
 
 	//serviceLogger = logging.GetLogger("CORE SERVICE")
 
